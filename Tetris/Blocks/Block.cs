@@ -8,27 +8,71 @@ namespace Tetris.Blocks
 {
     public class Block : Field
     {
-        protected bool Is_Collide;
-        protected byte X;
-        protected byte Y;
-        protected Enum type = blocks.block;
+        protected bool is_Down;
+        public bool Is_Down
+        {
+            get 
+            {
+                return is_Down;
+            }
+        }
+
+        protected byte x;
+        public byte X
+        {
+            get
+            {
+                return x;
+            }
+            set 
+            {
+                x = value;
+            }
+        }
+
+        protected byte y;
+        public byte Y
+        {
+            get
+            {
+                return y;
+            }
+            set
+            {
+                y = value;
+            }
+        }
+
+        protected Enum type;
+        public Enum Type
+        {
+            get
+            {
+                return type;
+            }
+        }
 
         public Block(byte x, byte y)
         {
-            X = x;
-            Y = y;
-            Is_Collide = false;
+            this.x = x;
+            this.y = y;
+            type = blocks.block;
+            is_Down = false;
         }
 
         public void Fall()
         {
-            if (!Is_Collide)
+            if (!is_Down)
             {
+                if (Field.IsDown(this))
+                {
+                    is_Down = true;
+                }
                 if (Field.IsCollide(this))
                 {
-                    Is_Collide = true;
+                    
                 }
-                Field.SetBlock(X, Y, blocks.empty);
+                Field.SetBlock(x, y, blocks.empty);
                 Y++;
                 Field.SetBlock(this);
             }
@@ -36,33 +80,26 @@ namespace Tetris.Blocks
 
         public void CreateBlock()
         {
-            Field.AddBlock(this);
+            Field.SetCurrentBlock(this);
             Field.SetBlock(this);
-        }
-
-        public byte GetX()
-        {
-            return X;
         }
 
         public void Left()
         {
-            X--;
+            if (x > 1 || !(Field.GetBlock((byte)(x - 1),y).Equals(blocks.block)))
+            {
+                Field.SetBlock(x, y, blocks.empty);
+                x--;
+            }
         }
 
         public void Right()
         {
-            X++;
-        }
-
-        public byte GetY()
-        {
-            return Y;
-        }
-
-        public Enum GetType()
-        {
-            return type;
+            if (x < 8 || !(Field.GetBlock((byte)(x+1),y).Equals(blocks.block)))
+            {
+                Field.SetBlock(x, y, blocks.empty);
+                x++;
+            }
         }
     }
 }
