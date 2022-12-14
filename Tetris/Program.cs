@@ -20,6 +20,7 @@ namespace Tetris
         static void Start()
         {
             Field field = new Field();
+            field.CreateField();
             field.PrintField();
             Block testBlock = new Block(2, 0);
             testBlock.CreateBlock();
@@ -33,8 +34,8 @@ namespace Tetris
             thread.Start();
             while (true)
             {
-                field.MoveBlocks();
                 System.Threading.Thread.Sleep(750);
+                field.MoveBlock();
                 Console.SetCursorPosition(0, 0);
                 field.PrintField();
             }

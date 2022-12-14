@@ -15,21 +15,38 @@ namespace Tetris
             floor = '\u2550'
         }
 
-        private int score;
-        private int lines;
-        private static List<Block> tetrisBlocks;
-        private static Enum[,] blockField = new Enum[10,17];
-
-
-        public Field()
+        private int score = 0;
+        public int Score
         {
-            score = 0;
-            lines = 0;
-            tetrisBlocks = new List<Block>();
-            createField();
+            get
+            {
+                return score;
+            }
+            set
+            {
+                score = value;
+            }
         }
 
-        private void createField()
+        private int lines = 0;
+        public int Lines
+        {
+            get
+            {
+                return lines;
+            }
+            set
+            {
+                lines = value;
+            }
+        }
+
+        private static Enum[,] blockField = new Enum[10, 17];
+
+        private static Block currentBlock;
+        private Random random = new Random();
+
+        public void CreateField()
         {
             for (int x = 1; x < 9; x++)
             {
@@ -49,6 +66,7 @@ namespace Tetris
             }
         }
 
+        //Prints game field
         public void PrintField()
         {
             for (int y = 2; y < 17; y++)
@@ -56,24 +74,39 @@ namespace Tetris
                 for (int x = 0; x < 10; x++)
                 {
                     Console.Write(Convert.ToChar(blockField[x,y]));
+                    if (y == 8 && x == 9)
+                    {
+                        Console.Write("   Lines: " + lines);
+                    }
+                    if (y == 10 && x == 9)
+                    {
+                        Console.Write("   Score: " + score);
+                    }
                 }
                 Console.WriteLine();
             }
         }
 
-        public static bool IsCollide(Block block)
+        //Checks if the current block reached the bottom of game field
+        public static bool IsDown(Block block)
         {
-            if (blockField[block.GetX(), block.GetY() + 2].Equals(blocks.block) ||
-                blockField[block.GetX(), block.GetY() + 2].Equals(blocks.floor))
+            if (blockField[block.X, block.Y + 2].Equals(blocks.block) ||
+                blockField[block.X, block.Y + 2].Equals(blocks.floor))
             {
                 return true;
             }
             return false;
         }
 
+        //Checks if the current block collides with other blocks
+        public static bool IsCollide(Block block)
+        {
+            return false;
+        }
+
         public static void SetBlock(Block block)
         {
-            blockField[block.GetX(), block.GetY()] = block.GetType();
+            blockField[block.X, block.Y] = block.Type;
         }
 
         public static void SetBlock(byte x, byte y, Enum type)
@@ -81,33 +114,39 @@ namespace Tetris
             blockField[x, y] = type;
         }
 
-        public static void AddBlock(Block block)
+        public static Enum GetBlock(byte x, byte y)
         {
-            tetrisBlocks.Add(block);
+            return blockField[x, y];
         }
 
-        public void MoveBlocks()
+        public static void SetCurrentBlock(Block block)
         {
-            foreach (Block block in tetrisBlocks)
+            currentBlock = block;
+        }
+
+        //Move current block down. If the block has fallen, it will create a new block 
+        public void MoveBlock()
+        {
+            if (currentBlock.Is_Down)
             {
-                block.Fall();
+                byte blockX = (byte)random.Next(1, 8);
+                Block block = new Block(blockX, 0);
+                block.CreateBlock();
+            }
+            else
+            {
+                currentBlock.Fall();
             }
         }
 
         public void MoveBlocks_Left()
         {
-            foreach (Block block in tetrisBlocks)
-            {
-                block.Left();
-            }
+            currentBlock.Left();
         }
 
         public void MoveBlocks_Right()
         {
-            foreach (Block block in tetrisBlocks)
-            {
-                block.Right();
-            }
+            currentBlock.Right();
         }
     }
 }
