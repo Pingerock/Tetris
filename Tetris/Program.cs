@@ -23,8 +23,7 @@ namespace Tetris
             Field field = new Field();
             field.CreateField();
             field.PrintField();
-            Block testBlock = new Block(2, 0);
-            testBlock.CreateBlock();
+            field.CreateBlock();
             Console.CursorVisible = false;
             Console.OutputEncoding = Encoding.Unicode;
             Update(field);

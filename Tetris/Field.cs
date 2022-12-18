@@ -14,6 +14,17 @@ namespace Tetris
             floor = '\u2550'
         }
 
+        public enum Tetrominos
+        {
+            O,
+            I,
+            J,
+            L,
+            T,
+            Z,
+            S
+        }
+
         private bool isPaused = false;
         public bool IsPaused
         {
@@ -90,7 +101,7 @@ namespace Tetris
 
         private static Enum[,] blockField = new Enum[10, 26];
 
-        private static Block currentBlock;
+        private static Tetromino currentTetromino;
         private Random random = new Random();
 
         public void CreateField()
@@ -158,27 +169,31 @@ namespace Tetris
             blockField[x, y] = type;
         }
 
-        public static void SetCurrentBlock(Block block)
-        {
-            currentBlock = block;
-            blockField[block.X, block.Y] = block.Type;
-        }
-
         public static Enum GetBlock(byte x, byte y)
         {
             return blockField[x, y];
+        }
+
+        public void CreateBlock()
+        {
+            //Create class object Tetromino, that consists of 4 blocks.
+            Array values = Enum.GetValues(typeof(Tetrominos));
+            Tetrominos randomTetromino = (Tetrominos)values.GetValue(random.Next(values.Length));
+            Tetromino tetromino = new Tetromino(randomTetromino);
+            currentTetromino = tetromino;
         }
 
         //Move current block down. If the block has fallen, it will create a new block 
         public void MoveBlock()
         {
             // Note: I don't like this tree of ifs and elses. At least it works.
-            if (currentBlock.IsDown)
+            if (currentTetromino.IsDown)
             {
-                byte blockX = (byte)random.Next(1, 8);
-                Block block = new Block(blockX, 0);
-                block.CreateBlock();
-                SetCurrentBlock(block);
+                //byte blockX = (byte)random.Next(1, 8);
+                //Block block = new Block(blockX, 0);
+                //block.CreateBlock();
+                //SetCurrentBlock(block);
+
             }
             else
             {
@@ -186,18 +201,18 @@ namespace Tetris
                 {
                     if (isMovedLeft)
                     {
-                        currentBlock.Left();
+                        currentTetromino.Left();
                         isMovedLeft = false;
                     }
                     if (isMovedRight)
                     {
-                        currentBlock.Right();
+                        currentTetromino.Right();
                         isMovedRight = false;
                     }
                 }
                 else
                 {
-                    currentBlock.Fall();
+                    currentTetromino.Fall();
                 }
             }
             DetectLines();

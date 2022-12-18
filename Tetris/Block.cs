@@ -8,18 +8,8 @@ namespace Tetris
 {
     public class Block : Field
     {
-        private enum tetrominos
-        {
-            O,
-            I,
-            J,
-            L,
-            T,
-            Z,
-            S
-        }
 
-        protected bool isDown = false;
+        private bool isDown = false;
         public bool IsDown
         {
             get 
@@ -28,7 +18,7 @@ namespace Tetris
             }
         }
 
-        protected byte x;
+        private byte x;
         public byte X
         {
             get
@@ -41,7 +31,7 @@ namespace Tetris
             }
         }
 
-        protected byte y;
+        private byte y;
         public byte Y
         {
             get
@@ -54,7 +44,7 @@ namespace Tetris
             }
         }
 
-        protected Enum type = blocks.block;
+        private Enum type = blocks.block;
         public Enum Type
         {
             get
@@ -65,23 +55,20 @@ namespace Tetris
 
         private Random random = new Random();
 
+        public Block()
+        {
+            
+        }
+
         public Block(byte x, byte y)
         {
             this.x = x;
             this.y = y;
         }
 
-        public void CreateBlock()
-        {
-            //Create class object Tetromino, that consists of 4 blocks.
-            Array values = Enum.GetValues(typeof(tetrominos));
-            tetrominos randomTetromino = (tetrominos)values.GetValue(random.Next(values.Length));
-
-        }
-
         public void Fall()
         {
-            if (!IsDownCheck(this))
+            if (!IsDownCheck())
             {
                 Field.SetBlock(x, y, blocks.empty);
                 y++;
@@ -94,7 +81,7 @@ namespace Tetris
         }
 
         //Checks if the current block reached the bottom of game field
-        public bool IsDownCheck(Block block)
+        public bool IsDownCheck()
         {
             if (Field.GetBlock(x,(byte)(y+1)).Equals(blocks.block) ||
                 Field.GetBlock(x, (byte)(y+1)).Equals(blocks.floor))
