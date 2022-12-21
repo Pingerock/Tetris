@@ -73,10 +73,7 @@ namespace Tetris
 
         public void CreateBlock()
         {
-            //Create class object Tetromino, that consists of 4 blocks.
-            Array values = Enum.GetValues(typeof(tetrominos));
-            tetrominos randomTetromino = (tetrominos)values.GetValue(random.Next(values.Length));
-
+            Field.SetCurrentBlock(this);
         }
 
         public void Fall()
