@@ -38,6 +38,19 @@ namespace Tetris
             }
         }
 
+        private bool isRotated = false;
+        public bool IsRotated
+        {
+            get
+            {
+                return isRotated;
+            }
+            set
+            {
+                isRotated = value;
+            }
+        }
+
         private bool isLost = false;
         public bool IsLost
         {
@@ -157,6 +170,11 @@ namespace Tetris
                 }
                 Console.WriteLine();
             }
+            
+            Console.WriteLine("Up arrow - to rotate");
+            Console.WriteLine("Down arrow(hold) - fall faster");
+            Console.WriteLine("Left/Right arrow - move");
+            Console.WriteLine("SpaceBar - pause game");
         }
 
         public static void SetBlock(Block block)
@@ -187,35 +205,46 @@ namespace Tetris
         public void MoveBlock()
         {
             // Note: I don't like this tree of ifs and elses. At least it works.
-            if (currentTetromino.IsDown)
+            if (!isPaused)
             {
-                //byte blockX = (byte)random.Next(1, 8);
-                //Block block = new Block(blockX, 0);
-                //block.CreateBlock();
-                //SetCurrentBlock(block);
-
-            }
-            else
-            {
-                if (isMovedLeft || isMovedRight)
+                if (currentTetromino.IsDown)
                 {
-                    if (isMovedLeft)
-                    {
-                        currentTetromino.Left();
-                        isMovedLeft = false;
-                    }
-                    if (isMovedRight)
-                    {
-                        currentTetromino.Right();
-                        isMovedRight = false;
-                    }
+                    //byte blockX = (byte)random.Next(1, 8);
+                    //Block block = new Block(blockX, 0);
+                    //block.CreateBlock();
+                    //SetCurrentBlock(block);
+                    CreateBlock();
                 }
                 else
                 {
-                    currentTetromino.Fall();
+                    if (isMovedLeft || isMovedRight)
+                    {
+                        if (isMovedLeft)
+                        {
+                            currentTetromino.Left();
+                            isMovedLeft = false;
+                        }
+                        if (isMovedRight)
+                        {
+                            currentTetromino.Right();
+                            isMovedRight = false;
+                        }
+                    }
+                    else
+                    {
+                        if (isRotated)
+                        {
+                            currentTetromino.Rotate();
+                            isRotated = false;
+                        }
+                        else
+                        {
+                            currentTetromino.Fall();
+                        }
+                    }
                 }
+                DetectLines();
             }
-            DetectLines();
         }
 
         public void DetectLines()

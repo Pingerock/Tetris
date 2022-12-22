@@ -87,6 +87,9 @@ namespace Tetris
                             field.IsPaused = false;
                         }
                         break;
+                    case ConsoleKey.UpArrow:
+                        field.IsRotated = true;
+                        break;
                     default:
                         waitTime = 500;
                         break;
