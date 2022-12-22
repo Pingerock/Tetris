@@ -78,13 +78,16 @@ namespace Tetris
                         waitTime = 50;
                         break;
                     case ConsoleKey.Spacebar:
-                        if (!field.IsPaused)
+                        if(!field.IsLost)
                         {
-                            field.IsPaused = true;
-                        }
-                        else
-                        {
-                            field.IsPaused = false;
+                            if (!field.IsPaused)
+                            {
+                                field.IsPaused = true;
+                            }
+                            else
+                            {
+                                field.IsPaused = false;
+                            }
                         }
                         break;
                     case ConsoleKey.UpArrow:
