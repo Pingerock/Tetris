@@ -18,6 +18,7 @@ namespace Tetris
             Console.ReadLine();
         }
 
+        //Creates gamefield and starts the game
         static void Start()
         {
             Field field = new Field();
@@ -31,10 +32,13 @@ namespace Tetris
 
         static void Update(Field field)
         {
+            //Create a thread that will read players keyboard inputs
             Thread thread = new Thread(() => ReadInput(field));
             thread.Start();
+            //Starts an infinite loop that will move blocks in game field
             while (true)
             {
+                //Both loop in threads(Main and ReadInput) starts with Sleep method so they will be "synchronized"
                 System.Threading.Thread.Sleep(waitTime);
                 field.MoveBlock();
                 Console.SetCursorPosition(0, 0);
@@ -73,7 +77,9 @@ namespace Tetris
                     case ConsoleKey.RightArrow:
                         field.IsMovedRight = true;
                         break;
+                    // Problems with DownArrow button:
                     // The program doesn't registry holding and unholding button fast. Need to do something with ReadInput method.
+                    // While holding this button the game field will start to look "whacky". I don't know how to say it correctly.
                     case ConsoleKey.DownArrow:
                         waitTime = 50;
                         break;

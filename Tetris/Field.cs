@@ -6,7 +6,7 @@ namespace Tetris
     public class Field
     {
         //Field parts in Unicode
-        public enum blocks
+        public enum Blocks
         {
             empty = '\u0020',
             block = '\u2591',
@@ -14,6 +14,7 @@ namespace Tetris
             floor = '\u2550'
         }
 
+        //Codenames of tetorminos(Tetris figures)
         public enum Tetrominos
         {
             O,
@@ -25,119 +26,44 @@ namespace Tetris
             S
         }
 
-        private bool isPaused = false;
-        public bool IsPaused
-        {
-            get 
-            {
-                return isPaused;
-            }
-            set 
-            {
-                isPaused = value;
-            }
-        }
+        //Game state booleans
+        public bool IsPaused { get; set; } = false;
+        public bool IsRotated { get; set; } = false;
+        public bool IsLost { get; private set; } = false;
+        public bool IsMovedLeft { get; set; } = false;
+        public bool IsMovedRight { get; set; } = false;
+        
+        //Game stats
+        private int Score { get; set; } = 0;
+        private int Lines { get; set; } = 0;
 
-        private bool isRotated = false;
-        public bool IsRotated
-        {
-            get
-            {
-                return isRotated;
-            }
-            set
-            {
-                isRotated = value;
-            }
-        }
-
-        private bool isLost = false;
-        public bool IsLost
-        {
-            get
-            {
-                return isLost;
-            }
-        }
-
-        private bool isMovedLeft = false;
-        public bool IsMovedLeft
-        {
-            get
-            {
-                return isMovedLeft;
-            }
-            set
-            {
-                isMovedLeft = value;
-            }
-        }
-
-        private bool isMovedRight = false;
-        public bool IsMovedRight
-        {
-            get
-            {
-                return isMovedRight;
-            }
-            set
-            {
-                isMovedRight = value;
-            }
-        }
-
-        private int score = 0;
-        public int Score
-        {
-            get
-            {
-                return score;
-            }
-            set
-            {
-                score = value;
-            }
-        }
-
-        private int lines = 0;
-        public int Lines
-        {
-            get
-            {
-                return lines;
-            }
-            set
-            {
-                lines = value;
-            }
-        }
-
-        private static Enum[,] blockField = new Enum[10, 26];
-
+        private static Blocks[,] blockField = new Blocks[10, 26];
         private static Tetromino currentTetromino;
+
         private Random random = new Random();
 
+        //Filling blockField with Blocks enums
         public void CreateField()
         {
             for (byte x = 1; x < 9; x++)
             {
-                blockField[x,25] = blocks.floor;
+                blockField[x,25] = Blocks.floor;
             }
             for (byte y = 0; y < 26; y++)
             {
-                blockField[0, y] = blocks.wall;
-                blockField[9, y] = blocks.wall;
+                blockField[0, y] = Blocks.wall;
+                blockField[9, y] = Blocks.wall;
             }
             for (byte x = 1; x < 9; x++)
             {
                 for (byte y = 0; y < 25; y++)
                 {
-                    blockField[x, y] = blocks.empty;
+                    blockField[x, y] = Blocks.empty;
                 }
             }
         }
 
-        //Prints game field
+        //Printing game field based on Blocks enums
         public void PrintField()
         {
             for (byte y = 2; y < 26; y++)
@@ -150,27 +76,27 @@ namespace Tetris
                         continue;
                     }
                     Console.Write(Convert.ToChar(blockField[x,y]));
-                    if (y == 8 && x == 9 && isLost)
+                    if (y == 8 && x == 9 && IsLost)
                     {
                         Console.Write("   Game Over!");
-                        isPaused = true;
+                        IsPaused = true;
                     }
-                    if (y == 8 && x == 9 && isPaused && !isLost)
+                    if (y == 8 && x == 9 && IsPaused && !IsLost)
                     {
                         Console.Write("   Paused!");
                     }
-                    // Clears "Paused!" part of field if it's not paused. This is dumb.
-                    if (y == 8 && x == 9 && !isPaused)
+                    // Clears "Paused!" part of field if it's not paused.
+                    if (y == 8 && x == 9 && !IsPaused)
                     {
                         Console.Write("          ");
                     }
                     if (y == 13 && x == 9)
                     {
-                        Console.Write("   Lines: " + lines);
+                        Console.Write("   Lines: " + Lines);
                     }
                     if (y == 15 && x == 9)
                     {
-                        Console.Write("   Score: " + score);
+                        Console.Write("   Score: " + Score);
                     }
                 }
                 Console.WriteLine();
@@ -187,66 +113,62 @@ namespace Tetris
             blockField[block.X, block.Y] = block.Type;
         }
 
-        public static void SetBlock(byte x, byte y, Enum type)
+        public static void SetBlock(byte x, byte y, Blocks type)
         {
             blockField[x, y] = type;
         }
 
-        public static Enum GetBlock(byte x, byte y)
+        public static Blocks GetBlock(byte x, byte y)
         {
             return blockField[x, y];
         }
 
+        //Create class object Tetromino.
         public void CreateBlock()
         {
-            //Create class object Tetromino, that consists of 4 blocks.
             Array values = Enum.GetValues(typeof(Tetrominos));
             Tetrominos randomTetromino = (Tetrominos)values.GetValue(random.Next(values.Length));
             Tetromino tetromino = new Tetromino(randomTetromino);
             currentTetromino = tetromino;
         }
 
-        //Move current block down. If the block has fallen, it will create a new block 
+        //Move current block based on the game states(left, right, rotate, paused, etc.)
         public void MoveBlock()
         {
             // Note: I don't like this tree of ifs and elses. At least it works.
-            if (!isPaused)
+            if (!IsPaused)
             {
                 if (currentTetromino.IsDown && currentTetromino.CentralBlock.Y == 2)
                 {
-                    isLost = true;
+                    IsLost = true;
                 }
                 else
                 {
                     if (currentTetromino.IsDown)
                     {
-                        //byte blockX = (byte)random.Next(1, 8);
-                        //Block block = new Block(blockX, 0);
-                        //block.CreateBlock();
-                        //SetCurrentBlock(block);
                         CreateBlock();
                     }
                     else
                     {
-                        if (isMovedLeft || isMovedRight)
+                        if (IsMovedLeft || IsMovedRight)
                         {
-                            if (isMovedLeft)
+                            if (IsMovedLeft)
                             {
                                 currentTetromino.Left();
-                                isMovedLeft = false;
+                                IsMovedLeft = false;
                             }
-                            if (isMovedRight)
+                            if (IsMovedRight)
                             {
                                 currentTetromino.Right();
-                                isMovedRight = false;
+                                IsMovedRight = false;
                             }
                         }
                         else
                         {
-                            if (isRotated)
+                            if (IsRotated)
                             {
                                 currentTetromino.Rotate();
-                                isRotated = false;
+                                IsRotated = false;
                             }
                             else
                             {
@@ -259,6 +181,8 @@ namespace Tetris
             }
         }
 
+        //Checks if the line was build 
+        //If there is a line, the game will erase it and give player a score
         public void DetectLines()
         {
             byte count = 0;
@@ -268,7 +192,7 @@ namespace Tetris
                 isBroken = false;
                 for (byte x = 1; x < 9; x++)
                 {
-                    if (blockField[x, y].Equals(blocks.empty))
+                    if (blockField[x, y].Equals(Blocks.empty))
                     {
                         isBroken = true;
                         break;
@@ -283,19 +207,19 @@ namespace Tetris
             switch (count)
             {
                 case 1:
-                    score += 100;
+                    Score += 100;
                     break;
                 case 2:
-                    score += 300;
+                    Score += 300;
                     break;
                 case 3:
-                    score += 700;
+                    Score += 700;
                     break;
                 case 4:
-                    score += 1500;
+                    Score += 1500;
                     break;
             }
-            lines += count;
+            Lines += count;
         }
 
         // I chose the Naive line clear gravity, because it was simple.
@@ -303,7 +227,7 @@ namespace Tetris
         {
             for (byte x = 1; x < 9; x++)
             {
-                blockField[x, y] = blocks.empty;
+                blockField[x, y] = Blocks.empty;
             }
         }
     }

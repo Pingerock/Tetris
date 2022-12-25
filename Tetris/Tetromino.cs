@@ -11,299 +11,273 @@ namespace Tetris
     {
         private List<Block> tetrominoBlocks = new List<Block>();
 
-        private Block centralBlock;
-        public Block CentralBlock
-        {
-            get 
-            {
-                return centralBlock;
-            }
-        }
+        public Block CentralBlock { get; private set; }
 
-        private Enum type;
-        public Enum Type
-        {
-            get
-            {
-                return type;
-            }
-        }
+        private Tetrominos Type;
 
-        //position of blocks during rotation(from 0-3)
-        private byte position = 0;
-        public byte Position 
-        {
-            get 
-            { 
-                return position; 
-            }
-        }
+        //Position of Blocks during rotation(from 0-3)
+        public byte Position { get; private set; } = 0;
 
-        private bool isDown;
-        public bool IsDown
-        {
-            get
-            {
-                return isDown;
-            }
-        }
+        public bool IsDown { get; private set; } = false;
 
-        public Tetromino(Enum tetrominos)
+        public Tetromino(Tetrominos tetrominos)
         {
-            type = tetrominos;
+            Type = tetrominos;
             CreateBlocks();
         }
 
+        //Set Blocks Position based on tetromino type
         private void CreateBlocks()
         {
-            switch (type)
+            switch (Type)
             {
                 case Field.Tetrominos.I:
                     tetrominoBlocks.Add(new Block(2, 0));
                     tetrominoBlocks.Add(new Block(3, 0));
                     tetrominoBlocks.Add(new Block(4, 0));
                     tetrominoBlocks.Add(new Block(5, 0));
-                    centralBlock = tetrominoBlocks[0];
+                    CentralBlock = tetrominoBlocks[0];
                     break;
                 case Field.Tetrominos.J:
                     tetrominoBlocks.Add(new Block(2, 1));
                     tetrominoBlocks.Add(new Block(3, 1));
                     tetrominoBlocks.Add(new Block(4, 1));
                     tetrominoBlocks.Add(new Block(2, 0));
-                    centralBlock = tetrominoBlocks[1];
+                    CentralBlock = tetrominoBlocks[1];
                     break;
                 case Field.Tetrominos.L:
                     tetrominoBlocks.Add(new Block(2, 1));
                     tetrominoBlocks.Add(new Block(2, 0));
                     tetrominoBlocks.Add(new Block(3, 0));
                     tetrominoBlocks.Add(new Block(4, 0));
-                    centralBlock = tetrominoBlocks[2];
+                    CentralBlock = tetrominoBlocks[2];
                     break;
                 case Field.Tetrominos.O:
                     tetrominoBlocks.Add(new Block(2, 1));
                     tetrominoBlocks.Add(new Block(3, 1));
                     tetrominoBlocks.Add(new Block(2, 0));
                     tetrominoBlocks.Add(new Block(3, 0));
-                    centralBlock = tetrominoBlocks[2];
+                    CentralBlock = tetrominoBlocks[2];
                     break;
                 case Field.Tetrominos.T:
                     tetrominoBlocks.Add(new Block(3, 1));
                     tetrominoBlocks.Add(new Block(2, 0));
                     tetrominoBlocks.Add(new Block(3, 0));
                     tetrominoBlocks.Add(new Block(4, 0));
-                    centralBlock = tetrominoBlocks[2];
+                    CentralBlock = tetrominoBlocks[2];
                     break;
                 case Field.Tetrominos.Z:
                     tetrominoBlocks.Add(new Block(3, 1));
                     tetrominoBlocks.Add(new Block(4, 1));
                     tetrominoBlocks.Add(new Block(2, 0));
                     tetrominoBlocks.Add(new Block(3, 0));
-                    centralBlock = tetrominoBlocks[3];
+                    CentralBlock = tetrominoBlocks[3];
                     break;
                 case Field.Tetrominos.S:
                     tetrominoBlocks.Add(new Block(2, 1));
                     tetrominoBlocks.Add(new Block(3, 1));
                     tetrominoBlocks.Add(new Block(3, 0));
                     tetrominoBlocks.Add(new Block(4, 0));
-                    centralBlock = tetrominoBlocks[2];
+                    CentralBlock = tetrominoBlocks[2];
                     break;
             }
         }
 
+        //Problem: It doesn't work!
         public void Rotate()
         {
-            switch (type)
+            switch (Type)
             {
                 case Field.Tetrominos.I:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
-                        tetrominoBlocks[1].X = centralBlock.X;
-                        tetrominoBlocks[1].Y = (byte)(centralBlock.Y + 1);
-                        tetrominoBlocks[2].X = centralBlock.X;
-                        tetrominoBlocks[2].Y = (byte)(centralBlock.Y + 2);
-                        tetrominoBlocks[3].X = centralBlock.X;
-                        tetrominoBlocks[3].Y = (byte)(centralBlock.Y + 3);
+                        tetrominoBlocks[1].X = CentralBlock.X;
+                        tetrominoBlocks[1].Y = (byte)(CentralBlock.Y + 1);
+                        tetrominoBlocks[2].X = CentralBlock.X;
+                        tetrominoBlocks[2].Y = (byte)(CentralBlock.Y + 2);
+                        tetrominoBlocks[3].X = CentralBlock.X;
+                        tetrominoBlocks[3].Y = (byte)(CentralBlock.Y + 3);
                     }
                     else 
                     {
-                        tetrominoBlocks[1].X = (byte)(centralBlock.X + 1);
-                        tetrominoBlocks[1].Y = centralBlock.Y;
-                        tetrominoBlocks[2].X = (byte)(centralBlock.X + 2);
-                        tetrominoBlocks[2].Y = centralBlock.Y;
-                        tetrominoBlocks[3].X = (byte)(centralBlock.X + 3);
-                        tetrominoBlocks[3].Y = centralBlock.Y;
+                        tetrominoBlocks[1].X = (byte)(CentralBlock.X + 1);
+                        tetrominoBlocks[1].Y = CentralBlock.Y;
+                        tetrominoBlocks[2].X = (byte)(CentralBlock.X + 2);
+                        tetrominoBlocks[2].Y = CentralBlock.Y;
+                        tetrominoBlocks[3].X = (byte)(CentralBlock.X + 3);
+                        tetrominoBlocks[3].Y = CentralBlock.Y;
                     }
                     break;
                 case Field.Tetrominos.J:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[2].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[2].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y - 1);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[2].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[2].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y - 1);
                             break;
                         case 1:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y - 1);
-                            tetrominoBlocks[2].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[2].Y = (byte)(centralBlock.Y + 1);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y - 1);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y - 1);
+                            tetrominoBlocks[2].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[2].Y = (byte)(CentralBlock.Y + 1);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y - 1);
                             break;
                         case 2:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[2].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[2].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y + 1);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[2].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[2].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y + 1);
                             break;
                         case 3:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y + 1);
-                            tetrominoBlocks[2].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[2].Y = (byte)(centralBlock.Y - 1);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y - 1);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y + 1);
+                            tetrominoBlocks[2].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[2].Y = (byte)(CentralBlock.Y - 1);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y - 1);
                             break;
                     }
                     break;
                 case Field.Tetrominos.L:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y + 1);
-                            tetrominoBlocks[1].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[1].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y + 1);
+                            tetrominoBlocks[1].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[1].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y);
                             break;
                         case 1:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y - 1);
-                            tetrominoBlocks[1].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[1].Y = (byte)(centralBlock.Y - 1);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y + 1);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y - 1);
+                            tetrominoBlocks[1].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[1].Y = (byte)(CentralBlock.Y - 1);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y + 1);
                             break;
                         case 2:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y - 1);
-                            tetrominoBlocks[1].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[1].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y - 1);
+                            tetrominoBlocks[1].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[1].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y);
                             break;
                         case 3:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y + 1);
-                            tetrominoBlocks[1].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[1].Y = (byte)(centralBlock.Y + 1);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y - 1);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y + 1);
+                            tetrominoBlocks[1].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[1].Y = (byte)(CentralBlock.Y + 1);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y - 1);
                             break;
                     }
                     break;
                 case Field.Tetrominos.O:
                     break;
                 case Field.Tetrominos.T:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y + 1);
-                            tetrominoBlocks[1].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[1].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y + 1);
+                            tetrominoBlocks[1].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[1].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y);
                             break;
                         case 1:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[1].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[1].Y = (byte)(centralBlock.Y - 1);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y + 1);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[1].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[1].Y = (byte)(CentralBlock.Y - 1);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y + 1);
                             break;
                         case 2:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y - 1);
-                            tetrominoBlocks[1].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[1].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X - 1);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y - 1);
+                            tetrominoBlocks[1].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[1].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X - 1);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y);
                             break;
                         case 3:
-                            tetrominoBlocks[0].X = (byte)(centralBlock.X + 1);
-                            tetrominoBlocks[0].Y = (byte)(centralBlock.Y);
-                            tetrominoBlocks[1].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[1].Y = (byte)(centralBlock.Y + 1);
-                            tetrominoBlocks[3].X = (byte)(centralBlock.X);
-                            tetrominoBlocks[3].Y = (byte)(centralBlock.Y - 1);
+                            tetrominoBlocks[0].X = (byte)(CentralBlock.X + 1);
+                            tetrominoBlocks[0].Y = (byte)(CentralBlock.Y);
+                            tetrominoBlocks[1].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[1].Y = (byte)(CentralBlock.Y + 1);
+                            tetrominoBlocks[3].X = (byte)(CentralBlock.X);
+                            tetrominoBlocks[3].Y = (byte)(CentralBlock.Y - 1);
                             break;
                     }
                     break;
                 case Field.Tetrominos.Z:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
-                        tetrominoBlocks[0].X = (byte)(centralBlock.X - 1);
-                        tetrominoBlocks[0].Y = (byte)(centralBlock.Y);
-                        tetrominoBlocks[1].X = (byte)(centralBlock.X - 1);
-                        tetrominoBlocks[1].Y = (byte)(centralBlock.Y + 1);
-                        tetrominoBlocks[2].X = (byte)(centralBlock.X);
-                        tetrominoBlocks[2].Y = (byte)(centralBlock.Y - 1);
+                        tetrominoBlocks[0].X = (byte)(CentralBlock.X - 1);
+                        tetrominoBlocks[0].Y = (byte)(CentralBlock.Y);
+                        tetrominoBlocks[1].X = (byte)(CentralBlock.X - 1);
+                        tetrominoBlocks[1].Y = (byte)(CentralBlock.Y + 1);
+                        tetrominoBlocks[2].X = (byte)(CentralBlock.X);
+                        tetrominoBlocks[2].Y = (byte)(CentralBlock.Y - 1);
                     }
                     else
                     {
-                        tetrominoBlocks[0].X = (byte)(centralBlock.X);
-                        tetrominoBlocks[0].Y = (byte)(centralBlock.Y + 1);
-                        tetrominoBlocks[1].X = (byte)(centralBlock.X + 1);
-                        tetrominoBlocks[1].Y = (byte)(centralBlock.Y + 1);
-                        tetrominoBlocks[2].X = (byte)(centralBlock.X - 1);
-                        tetrominoBlocks[2].Y = (byte)(centralBlock.Y);
+                        tetrominoBlocks[0].X = (byte)(CentralBlock.X);
+                        tetrominoBlocks[0].Y = (byte)(CentralBlock.Y + 1);
+                        tetrominoBlocks[1].X = (byte)(CentralBlock.X + 1);
+                        tetrominoBlocks[1].Y = (byte)(CentralBlock.Y + 1);
+                        tetrominoBlocks[2].X = (byte)(CentralBlock.X - 1);
+                        tetrominoBlocks[2].Y = (byte)(CentralBlock.Y);
                     }
                     break;
                 case Field.Tetrominos.S:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
-                        tetrominoBlocks[0].X = (byte)(centralBlock.X - 1);
-                        tetrominoBlocks[0].Y = (byte)(centralBlock.Y + 1);
-                        tetrominoBlocks[1].X = (byte)(centralBlock.X);
-                        tetrominoBlocks[1].Y = (byte)(centralBlock.Y + 1);
-                        tetrominoBlocks[3].X = (byte)(centralBlock.X + 1);
-                        tetrominoBlocks[3].Y = (byte)(centralBlock.Y);
+                        tetrominoBlocks[0].X = (byte)(CentralBlock.X - 1);
+                        tetrominoBlocks[0].Y = (byte)(CentralBlock.Y + 1);
+                        tetrominoBlocks[1].X = (byte)(CentralBlock.X);
+                        tetrominoBlocks[1].Y = (byte)(CentralBlock.Y + 1);
+                        tetrominoBlocks[3].X = (byte)(CentralBlock.X + 1);
+                        tetrominoBlocks[3].Y = (byte)(CentralBlock.Y);
                     }
                     else
                     {
-                        tetrominoBlocks[0].X = (byte)(centralBlock.X - 1);
-                        tetrominoBlocks[0].Y = (byte)(centralBlock.Y - 1);
-                        tetrominoBlocks[1].X = (byte)(centralBlock.X - 1);
-                        tetrominoBlocks[1].Y = (byte)(centralBlock.Y);
-                        tetrominoBlocks[3].X = (byte)(centralBlock.X);
-                        tetrominoBlocks[3].Y = (byte)(centralBlock.Y + 1);
+                        tetrominoBlocks[0].X = (byte)(CentralBlock.X - 1);
+                        tetrominoBlocks[0].Y = (byte)(CentralBlock.Y - 1);
+                        tetrominoBlocks[1].X = (byte)(CentralBlock.X - 1);
+                        tetrominoBlocks[1].Y = (byte)(CentralBlock.Y);
+                        tetrominoBlocks[3].X = (byte)(CentralBlock.X);
+                        tetrominoBlocks[3].Y = (byte)(CentralBlock.Y + 1);
                     }
                     break;
             }
-            if (position == 4)
+            if (Position == 4)
             {
-                position = 0;
+                Position = 0;
             }
             else
             {
-                position++;
+                Position++;
             }
         }
 
         public void Right()
         {
-            switch (type)
+            switch (Type)
             {
                 case Field.Tetrominos.I:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
                         if (Block.CheckRight(tetrominoBlocks[3]))
                         {
@@ -331,7 +305,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.J:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
                             if (Block.CheckRight(tetrominoBlocks[2]) &&
@@ -384,7 +358,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.L:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
                             if (Block.CheckRight(tetrominoBlocks[0]) &&
@@ -448,7 +422,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.T:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
                             if (Block.CheckRight(tetrominoBlocks[0]) &&
@@ -502,7 +476,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.Z:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
                         if (Block.CheckRight(tetrominoBlocks[1]) &&
                                 Block.CheckRight(tetrominoBlocks[3]))
@@ -528,7 +502,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.S:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
                         if (Block.CheckRight(tetrominoBlocks[1]) &&
                                 Block.CheckRight(tetrominoBlocks[3]))
@@ -557,12 +531,12 @@ namespace Tetris
 
         public void Left()
         {
-            switch (type)
+            switch (Type)
             {
                 case Field.Tetrominos.I:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
-                        if (Block.CheckLeft(centralBlock))
+                        if (Block.CheckLeft(CentralBlock))
                         {
                             foreach (Block block in tetrominoBlocks)
                             {
@@ -587,7 +561,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.J:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
                             if (Block.CheckLeft(tetrominoBlocks[0]) &&
@@ -638,7 +612,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.L:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
                             if (Block.CheckLeft(tetrominoBlocks[0]) &&
@@ -696,7 +670,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.T:
-                    switch (position)
+                    switch (Position)
                     {
                         case 0:
                             if (Block.CheckLeft(tetrominoBlocks[0]) &&
@@ -750,7 +724,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.Z:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
                         if (Block.CheckLeft(tetrominoBlocks[2]) &&
                                 Block.CheckLeft(tetrominoBlocks[0]))
@@ -776,7 +750,7 @@ namespace Tetris
                     }
                     break;
                 case Field.Tetrominos.S:
-                    if (position % 2 == 0)
+                    if (Position % 2 == 0)
                     {
                         if (Block.CheckLeft(tetrominoBlocks[2]) &&
                                 Block.CheckLeft(tetrominoBlocks[0]))
@@ -814,56 +788,38 @@ namespace Tetris
             }
             else 
             {
-                isDown = true;
+                IsDown = true;
             }
         }
 
         private bool IsDownCheck()
         {
             bool fallCheck = false;
-            switch (type)
+            switch (Type)
             {
                 case Field.Tetrominos.I:
-                    fallCheck = centralBlock.CheckBlocksNearby(position, 1);
+                    fallCheck = CentralBlock.CheckBlocksNearby(Position, 1);
                     break;
                 case Field.Tetrominos.J:
-                    fallCheck = centralBlock.CheckBlocksNearby(position, 2);
+                    fallCheck = CentralBlock.CheckBlocksNearby(Position, 2);
                     break;
                 case Field.Tetrominos.L:
-                    fallCheck = centralBlock.CheckBlocksNearby(position, 3);
+                    fallCheck = CentralBlock.CheckBlocksNearby(Position, 3);
                     break;
                 case Field.Tetrominos.O:
-                    fallCheck = centralBlock.CheckBlocksNearby(position, 4);
+                    fallCheck = CentralBlock.CheckBlocksNearby(Position, 4);
                     break;
                 case Field.Tetrominos.T:
-                    fallCheck = centralBlock.CheckBlocksNearby(position, 5);
+                    fallCheck = CentralBlock.CheckBlocksNearby(Position, 5);
                     break;
                 case Field.Tetrominos.Z:
-                    fallCheck = centralBlock.CheckBlocksNearby(position, 6);
+                    fallCheck = CentralBlock.CheckBlocksNearby(Position, 6);
                     break;
                 case Field.Tetrominos.S:
-                    fallCheck = centralBlock.CheckBlocksNearby(position, 7);
+                    fallCheck = CentralBlock.CheckBlocksNearby(Position, 7);
                     break;
             }
             return fallCheck;
         }
-
-        /*switch (type)
-            {
-                case Field.Tetrominos.I:
-                    break;
-                case Field.Tetrominos.J:
-                    break;
-                case Field.Tetrominos.L:
-                    break;
-                case Field.Tetrominos.O:
-                    break;
-                case Field.Tetrominos.T:
-                    break;
-                case Field.Tetrominos.Z:
-                    break;
-                case Field.Tetrominos.S:
-                    break;
-            }*/
-}
+    }
 }

@@ -10,49 +10,13 @@ namespace Tetris
     public class Block : Field
     {
 
-        private bool isDown = false;
-        public bool IsDown
-        {
-            get 
-            {
-                return isDown;
-            }
-        }
+        public bool IsDown { get; private set; } = false;
 
-        private byte x;
-        public byte X
-        {
-            get
-            {
-                return x;
-            }
-            set 
-            {
-                x = value;
-            }
-        }
+        public byte X { get; set; }
 
-        private byte y;
-        public byte Y
-        {
-            get
-            {
-                return y;
-            }
-            set
-            {
-                y = value;
-            }
-        }
+        public byte Y { get; set; }
 
-        private Enum type = blocks.block;
-        public Enum Type
-        {
-            get
-            {
-                return type;
-            }
-        }
+        public Blocks Type { get; } = Blocks.block;
 
         private Random random = new Random();
 
@@ -61,32 +25,33 @@ namespace Tetris
             
         }
 
-        public Block(byte x, byte y)
+        public Block(byte X, byte Y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = X;
+            this.Y = Y;
         }
 
+        //Checks if the block can fall
         public void Fall()
         {
             if (!IsDownCheck())
             {
-                Field.SetBlock(x, y, blocks.empty);
-                y++;
+                Field.SetBlock(X, Y, Blocks.empty);
+                Y++;
                 Field.SetBlock(this);
             }
             else
             {
-                isDown = true;
+                IsDown = true;
             }
         }
 
         //Checks if the current block reached the bottom of game field
-        // true - if block collided with other block/floor, otherwise - false
+        //true - if block collided with other block/floor, otherwise - false
         public bool IsDownCheck()
         {
-            if (Field.GetBlock(x,(byte)(y+1)).Equals(blocks.block) ||
-                Field.GetBlock(x, (byte)(y+1)).Equals(blocks.floor))
+            if (Field.GetBlock(X,(byte)(Y+1)) == Blocks.block ||
+                Field.GetBlock(X, (byte)(Y+1)) == Blocks.floor)
             {
                 return true;
             }
@@ -95,7 +60,7 @@ namespace Tetris
 
         // Checks if the tetromino can fall
         // true - if block collided with other block/floor, otherwise - false
-        // Note: I feel terrified by just looking at this.
+        // Note: I feel terrified by just looking at this. How can I make it shorter?
         public bool CheckBlocksNearby(byte position, byte type)
         {
             switch (type)
@@ -109,8 +74,8 @@ namespace Tetris
                     {
                         for (byte a = 0; a < 3; a++)
                         {
-                            if (Field.GetBlock((byte)(x+a), (byte)(y + 1)).Equals(blocks.block) ||
-                                Field.GetBlock((byte)(x+a), (byte)(y + 1)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X+a), (byte)(Y + 1)) == Blocks.block ||
+                                Field.GetBlock((byte)(X+a), (byte)(Y + 1)) == Blocks.floor)
                             {
                                 return true;
                             }
@@ -123,35 +88,35 @@ namespace Tetris
                         case 0:
                             for (int a = -1; a < 2; a++)
                             {
-                                if (Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.floor))
+                                if (Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.floor)
                                 {
                                     return true;
                                 }
                             }
                             return false;
                         case 1:
-                            if (Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock(X, (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock(X, (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
-                            if (Field.GetBlock((byte)(x + 1), y).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + 1), y).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X + 1), Y) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + 1), Y) == Blocks.floor)
                             {
                                 return true;
                             }
                             return false;
                         case 2:
-                            if (Field.GetBlock((byte)(x + 1), (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + 1), (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X + 1), (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + 1), (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
                             for (int a = -1; a < 1; a++)
                             {
-                                if (Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.floor))
+                                if (Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.floor)
                                 {
                                     return true;
                                 }
@@ -160,8 +125,8 @@ namespace Tetris
                         case 3:
                             for (int a = -1; a < 1; a++)
                             {
-                                if (Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.floor))
+                                if (Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.floor)
                                 {
                                     return true;
                                 }
@@ -173,28 +138,28 @@ namespace Tetris
                     switch (position)
                     {
                         case 0:
-                            if (Field.GetBlock((byte)(x - 1), (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x - 1), (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X - 1), (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X - 1), (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
                             for (int a = 0; a < 2; a++)
                             {
-                                if (Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.floor))
+                                if (Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.floor)
                                 {
                                     return true;
                                 }
                             }
                             return false;
                         case 1:
-                            if (Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock(X, (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock(X, (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
-                            if (Field.GetBlock((byte)(x + 1), y).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + 1), y).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X + 1), Y) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + 1), Y) == Blocks.floor)
                             {
                                 return true;
                             }
@@ -202,8 +167,8 @@ namespace Tetris
                         case 2:
                             for (int a = -1; a < 2; a++)
                             {
-                                if (Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.floor))
+                                if (Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.floor)
                                 {
                                     return true;
                                 }
@@ -212,8 +177,8 @@ namespace Tetris
                         case 3:
                             for (int a = -1; a < 1; a++)
                             {
-                                if (Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.floor))
+                                if (Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.floor)
                                 {
                                     return true;
                                 }
@@ -224,8 +189,8 @@ namespace Tetris
                 case 4:
                     for (byte a = 0; a < 2; a++)
                     {
-                        if (Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.block) ||
-                            Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.floor))
+                        if (Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.block ||
+                            Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.floor)
                         {
                             return true;
                         }
@@ -235,30 +200,30 @@ namespace Tetris
                     switch (position)
                     {
                         case 0:
-                            if (Field.GetBlock((byte)(x - 1), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x - 1), (byte)(y + 1)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X - 1), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X - 1), (byte)(Y + 1)) == Blocks.floor)
                             {
                                 return true;
                             }
-                            if (Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock(X, (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock(X, (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
-                            if (Field.GetBlock((byte)(x + 1), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + 1), (byte)(y + 1)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X + 1), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + 1), (byte)(Y + 1)) == Blocks.floor)
                             {
                                 return true;
                             }
                             return false;
                         case 1:
-                            if (Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock(X, (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock(X, (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
-                            if (Field.GetBlock((byte)(x - 1), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x - 1), (byte)(y + 1)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X - 1), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X - 1), (byte)(Y + 1)) == Blocks.floor)
                             {
                                 return true;
                             }
@@ -266,21 +231,21 @@ namespace Tetris
                         case 2:
                             for (int a = -1; a < 2; a++)
                             {
-                                if (Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 1)).Equals(blocks.floor))
+                                if (Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 1)) == Blocks.floor)
                                 {
                                     return true;
                                 }
                             }
                             return false;
                         case 3:
-                            if (Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock(X, (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock(X, (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
-                            if (Field.GetBlock((byte)(x + 1), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + 1), (byte)(y + 1)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X + 1), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + 1), (byte)(Y + 1)) == Blocks.floor)
                             {
                                 return true;
                             }
@@ -290,15 +255,15 @@ namespace Tetris
                 case 6:
                     if (position % 2 == 0)
                     {
-                        if (Field.GetBlock((byte)(x - 1), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x - 1), (byte)(y + 1)).Equals(blocks.floor))
+                        if (Field.GetBlock((byte)(X - 1), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X - 1), (byte)(Y + 1)) == Blocks.floor)
                         {
                             return true;
                         }
                         for (byte a = 0; a < 2; a++)
                         {
-                            if (Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
@@ -306,13 +271,13 @@ namespace Tetris
                     }
                     else
                     {
-                        if (Field.GetBlock(x, (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock(x, (byte)(y + 1)).Equals(blocks.floor))
+                        if (Field.GetBlock(X, (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock(X, (byte)(Y + 1)) == Blocks.floor)
                         {
                             return true;
                         }
-                        if (Field.GetBlock((byte)(x - 1), (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x - 1), (byte)(y + 2)).Equals(blocks.floor))
+                        if (Field.GetBlock((byte)(X - 1), (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X - 1), (byte)(Y + 2)) == Blocks.floor)
                         {
                             return true;
                         }
@@ -321,15 +286,15 @@ namespace Tetris
                 case 7:
                     if (position % 2 == 0)
                     {
-                        if (Field.GetBlock((byte)(x + 1), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + 1), (byte)(y + 1)).Equals(blocks.floor))
+                        if (Field.GetBlock((byte)(X + 1), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + 1), (byte)(Y + 1)) == Blocks.floor)
                         {
                             return true;
                         }
                         for (int a = 0; a > -2; a--)
                         {
-                            if (Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x + a), (byte)(y + 2)).Equals(blocks.floor))
+                            if (Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X + a), (byte)(Y + 2)) == Blocks.floor)
                             {
                                 return true;
                             }
@@ -337,13 +302,13 @@ namespace Tetris
                     }
                     else
                     {
-                        if (Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.block) ||
-                                    Field.GetBlock(x, (byte)(y + 2)).Equals(blocks.floor))
+                        if (Field.GetBlock(X, (byte)(Y + 2)) == Blocks.block ||
+                                    Field.GetBlock(X, (byte)(Y + 2)) == Blocks.floor)
                         {
                             return true;
                         }
-                        if (Field.GetBlock((byte)(x - 1), (byte)(y + 1)).Equals(blocks.block) ||
-                                    Field.GetBlock((byte)(x - 1), (byte)(y + 1)).Equals(blocks.floor))
+                        if (Field.GetBlock((byte)(X - 1), (byte)(Y + 1)) == Blocks.block ||
+                                    Field.GetBlock((byte)(X - 1), (byte)(Y + 1)) == Blocks.floor)
                         {
                             return true;
                         }
@@ -353,40 +318,44 @@ namespace Tetris
             return false;
         }
 
+        //Checks if the block can move left
         public static bool CheckLeft(Block block)
         {
-            if (block.X > 1 && !(Field.GetBlock((byte)(block.X - 1), block.Y).Equals(blocks.block)))
+            if (block.X > 1 && !(Field.GetBlock((byte)(block.X - 1), block.Y) == Blocks.block))
             {
                 return true;
             }
             return false;
         }
 
+        //Checks if the block can move right
         public static bool CheckRight(Block block)
         {
-            if (block.X < 8 && !(Field.GetBlock((byte)(block.X + 1), block.Y).Equals(blocks.block)))
+            if (block.X < 8 && !(Field.GetBlock((byte)(block.X + 1), block.Y) == Blocks.block))
             {
                 return true;
             }
             return false;
         }
 
+        //Moves block left 
         public void Left()
         {
-            if (x > 1 && !(Field.GetBlock((byte)(x-1),y).Equals(blocks.block)))
+            if (X > 1 && !(Field.GetBlock((byte)(X-1),Y) == Blocks.block))
             {
-                Field.SetBlock(x, y, blocks.empty);
-                x--;
+                Field.SetBlock(X, Y, Blocks.empty);
+                X--;
                 Field.SetBlock(this);
             }
         }
-         
+
+        //Moves block left 
         public void Right()
         {
-            if (x < 8 && !(Field.GetBlock((byte)(x+1),y).Equals(blocks.block)))
+            if (X < 8 && !(Field.GetBlock((byte)(X+1),Y) == Blocks.block))
             {
-                Field.SetBlock(x, y, blocks.empty);
-                x++;
+                Field.SetBlock(X, Y, Blocks.empty);
+                X++;
                 Field.SetBlock(this);
             }
         }
